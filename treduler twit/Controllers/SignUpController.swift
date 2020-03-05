@@ -12,13 +12,17 @@ class SignUpController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        configUI()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        configUI()
+    }
 
     func configUI(){
         view.backgroundColor = UIColor.mainBlue
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.backItem?.title = "Login"
     }
 
 }
