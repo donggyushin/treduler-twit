@@ -143,20 +143,6 @@ class LoginController: UIViewController {
         return button
     }()
     
-    private lazy var containerOfSignUpButton:UIView = {
-        let view = UIView()
-        view.backgroundColor = .yellow
-        
-        let label = UILabel()
-        label.textColor = .white
-        label.text = "Don't you have an account yet?"
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: -30).isActive = true
-        label.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -7).isActive = true
-        
-        return view
-    }()
     
     private lazy var signupLabel:UILabel = {
         let label = UILabel()
