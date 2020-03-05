@@ -9,21 +9,35 @@
 /* Begin PBXBuildFile section */
 		701435CB24114B4C00CCAAFB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435CA24114B4C00CCAAFB /* AppDelegate.swift */; };
 		701435CD24114B4C00CCAAFB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435CC24114B4C00CCAAFB /* SceneDelegate.swift */; };
-		701435CF24114B4C00CCAAFB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435CE24114B4C00CCAAFB /* ViewController.swift */; };
 		701435D224114B4C00CCAAFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701435D024114B4C00CCAAFB /* Main.storyboard */; };
 		701435D424114B5100CCAAFB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 701435D324114B5100CCAAFB /* Assets.xcassets */; };
 		701435D724114B5100CCAAFB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701435D524114B5100CCAAFB /* LaunchScreen.storyboard */; };
+		701435E024114BA800CCAAFB /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435DF24114BA800CCAAFB /* MainTabBarController.swift */; };
+		701435E22411503300CCAAFB /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435E12411503300CCAAFB /* FeedController.swift */; };
+		701435E42411504300CCAAFB /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435E32411504300CCAAFB /* NotificationController.swift */; };
+		701435E62411505200CCAAFB /* ConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435E52411505200CCAAFB /* ConversationController.swift */; };
+		701435E82411506D00CCAAFB /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435E72411506D00CCAAFB /* ExploreController.swift */; };
+		701435EB24115A2F00CCAAFB /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435EA24115A2F00CCAAFB /* Extension.swift */; };
+		701435ED24115C3B00CCAAFB /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435EC24115C3B00CCAAFB /* LoginController.swift */; };
+		701435EF24115C7B00CCAAFB /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435EE24115C7B00CCAAFB /* SignUpController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		701435C724114B4C00CCAAFB /* treduler twit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "treduler twit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		701435CA24114B4C00CCAAFB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		701435CC24114B4C00CCAAFB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		701435CE24114B4C00CCAAFB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		701435D124114B4C00CCAAFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		701435D324114B5100CCAAFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		701435D624114B5100CCAAFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		701435D824114B5100CCAAFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		701435DF24114BA800CCAAFB /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		701435E12411503300CCAAFB /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
+		701435E32411504300CCAAFB /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		701435E52411505200CCAAFB /* ConversationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationController.swift; sourceTree = "<group>"; };
+		701435E72411506D00CCAAFB /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
+		701435EA24115A2F00CCAAFB /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		701435EC24115C3B00CCAAFB /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		701435EE24115C7B00CCAAFB /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +70,38 @@
 		701435C924114B4C00CCAAFB /* treduler twit */ = {
 			isa = PBXGroup;
 			children = (
+				701435E924115A1D00CCAAFB /* Utils */,
+				701435DE24114B8C00CCAAFB /* Controllers */,
 				701435CA24114B4C00CCAAFB /* AppDelegate.swift */,
 				701435CC24114B4C00CCAAFB /* SceneDelegate.swift */,
-				701435CE24114B4C00CCAAFB /* ViewController.swift */,
 				701435D024114B4C00CCAAFB /* Main.storyboard */,
 				701435D324114B5100CCAAFB /* Assets.xcassets */,
 				701435D524114B5100CCAAFB /* LaunchScreen.storyboard */,
 				701435D824114B5100CCAAFB /* Info.plist */,
 			);
 			path = "treduler twit";
+			sourceTree = "<group>";
+		};
+		701435DE24114B8C00CCAAFB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				701435DF24114BA800CCAAFB /* MainTabBarController.swift */,
+				701435E12411503300CCAAFB /* FeedController.swift */,
+				701435E32411504300CCAAFB /* NotificationController.swift */,
+				701435E52411505200CCAAFB /* ConversationController.swift */,
+				701435E72411506D00CCAAFB /* ExploreController.swift */,
+				701435EC24115C3B00CCAAFB /* LoginController.swift */,
+				701435EE24115C7B00CCAAFB /* SignUpController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		701435E924115A1D00CCAAFB /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				701435EA24115A2F00CCAAFB /* Extension.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,9 +175,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				701435CF24114B4C00CCAAFB /* ViewController.swift in Sources */,
+				701435E42411504300CCAAFB /* NotificationController.swift in Sources */,
 				701435CB24114B4C00CCAAFB /* AppDelegate.swift in Sources */,
+				701435E82411506D00CCAAFB /* ExploreController.swift in Sources */,
+				701435E024114BA800CCAAFB /* MainTabBarController.swift in Sources */,
+				701435ED24115C3B00CCAAFB /* LoginController.swift in Sources */,
+				701435EF24115C7B00CCAAFB /* SignUpController.swift in Sources */,
 				701435CD24114B4C00CCAAFB /* SceneDelegate.swift in Sources */,
+				701435E62411505200CCAAFB /* ConversationController.swift in Sources */,
+				701435E22411503300CCAAFB /* FeedController.swift in Sources */,
+				701435EB24115A2F00CCAAFB /* Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
