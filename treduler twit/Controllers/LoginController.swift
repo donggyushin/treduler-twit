@@ -18,6 +18,16 @@ class LoginController: UIViewController {
         return view
     }()
     
+    lazy var twitlogoImageView:UIImageView = {
+        let iv = UIImageView()
+        iv.image = #imageLiteral(resourceName: "TwitterLogo")
+        iv.widthAnchor.constraint(equalToConstant: 25).isActive = true
+        iv.heightAnchor.constraint(equalToConstant: 25).isActive = true
+        iv.contentMode = .scaleAspectFit
+        iv.clipsToBounds = true
+        return iv
+    }()
+    
     lazy var twitLogoLabel:UILabel = {
         let label = UILabel()
         label.text = "twit"
@@ -123,6 +133,16 @@ class LoginController: UIViewController {
         return view
     }()
     
+    private lazy var loginButton:UIButton = {
+        let button = UIButton(type: UIButton.ButtonType.system)
+        button.backgroundColor = .white
+        button.setTitle("LOGIN", for: .normal)
+        button.setTitleColor(UIColor.mainBlue, for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 17)
+        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var containerOfSignUpButton:UIView = {
         let view = UIView()
         view.backgroundColor = .yellow
@@ -157,6 +177,8 @@ class LoginController: UIViewController {
     }()
     
     
+    
+    
     // MARK: - life circle
 
     override func viewDidLoad() {
@@ -178,6 +200,10 @@ class LoginController: UIViewController {
     @objc func goToSignUp(){
         let signUpVC = SignUpController()
         navigationController?.pushViewController(signUpVC, animated: true)
+    }
+    
+    @objc func loginButtonTapped(){
+        print("login button tapped")
     }
     
     
@@ -209,6 +235,11 @@ class LoginController: UIViewController {
         twitLogoLabel.bottomAnchor.constraint(equalTo: logoLabelsContainer.bottomAnchor, constant: -6).isActive = true
         twitLogoLabel.leftAnchor.constraint(equalTo: TredulerLogoLabel.rightAnchor, constant: 6).isActive = true
         
+        view.addSubview(twitlogoImageView)
+        twitlogoImageView.translatesAutoresizingMaskIntoConstraints = false
+        twitlogoImageView.leftAnchor.constraint(equalTo: TredulerLogoLabel.rightAnchor, constant: 15).isActive = true
+        twitlogoImageView.bottomAnchor.constraint(equalTo: twitLogoLabel.topAnchor, constant: 3).isActive = true
+        
         
         view.addSubview(emailTextFieldContainer)
         emailTextFieldContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -223,6 +254,14 @@ class LoginController: UIViewController {
         passwordTextFieldContainer.widthAnchor.constraint(equalToConstant: view.frame.width * 0.8).isActive = true
         passwordTextFieldContainer.heightAnchor.constraint(equalToConstant: 50).isActive = true
         passwordTextFieldContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        view.addSubview(loginButton)
+        loginButton.translatesAutoresizingMaskIntoConstraints = false
+        loginButton.topAnchor.constraint(equalTo: passwordTextFieldContainer.bottomAnchor, constant: 10).isActive = true
+        loginButton.widthAnchor.constraint(equalToConstant: view.frame.width * 0.8).isActive = true
+        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loginButton.layer.cornerRadius = 8
         
         view.addSubview(signupLabel)
         signupLabel.translatesAutoresizingMaskIntoConstraints = false
