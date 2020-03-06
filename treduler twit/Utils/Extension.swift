@@ -12,3 +12,15 @@ extension UIColor {
     static let mainBlue = UIColor(red: 29/255, green: 161/255, blue: 242/255, alpha: 1)
     static let tre = UIColor(displayP3Red: 29, green: 161, blue: 242, alpha: 1)
 }
+
+extension UIViewController {
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(UIViewController.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+}

@@ -7,10 +7,19 @@
 //
 
 import UIKit
+import Firebase
 
 class MainTabBarController: UITabBarController {
     
     // MARK: - properties
+    
+    var user:User? {
+        didSet {
+            guard let nav = self.viewControllers?[0] as? UINavigationController else { return }
+            guard let feedVC = nav.viewControllers.first as? FeedController else { return }
+            feedVC.user = self.user!
+        }
+    }
     
     lazy var actionButton:UIButton = {
         let button = UIButton()
@@ -27,16 +36,41 @@ class MainTabBarController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.view.backgroundColor = .white
-        configMainTabBarController()
-        configureMainTabBarUI()
-        
+        checkUserLoggedIn()
+    }
+    
+    // MARK: - helpers
+    
+    func checkUserLoggedIn() {
+        if Auth.auth().currentUser == nil {
+            self.view.backgroundColor = UIColor.mainBlue
+            DispatchQueue.main.async {
+                let loginVC = UINavigationController(rootViewController: LoginController())
+                loginVC.modalPresentationStyle = .fullScreen
+                self.present(loginVC, animated: true, completion: nil)
+            }
+        }else {
+            self.view.backgroundColor = UIColor.white
+            configMainTabBarController()
+            configureMainTabBarUI()
+            UserService.shared.fetchUser { (user) in
+                self.user = user
+            }
+        }
     }
     
     // MARK: - selectors
     @objc func actionButtonTapped(){
-        print("action button tapped")
+        guard let user = self.user else { return }
+        let uploadTweetController = UINavigationController(rootViewController: UploadTweetController(user: user))
+        uploadTweetController.modalPresentationStyle = .fullScreen
+        present(uploadTweetController, animated: true, completion: nil)
+        
+        
+//        try! Auth.auth().signOut()
+//        let loginVC = UINavigationController(rootViewController: LoginController())
+//        loginVC.modalPresentationStyle = .fullScreen
+//        self.present(loginVC, animated: true, completion: nil)
     }
     
     

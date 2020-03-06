@@ -7,15 +7,43 @@
 //
 
 import UIKit
+import Firebase
+import SDWebImage
 
 class FeedController: UIViewController {
     
+    // MARK: - properties
+    var user:User? {
+        didSet {
+            setUserProfileImage(profileUrl: self.user!.profileImageUrl)
+        }
+    }
+    
+    lazy var userProfileImageView:UIImageView = {
+        let profileImageView = UIImageView()
+        profileImageView.widthAnchor.constraint(equalToConstant: 32).isActive = true
+        profileImageView.heightAnchor.constraint(equalToConstant: 32).isActive = true
+        profileImageView.layer.cornerRadius = 16
+        profileImageView.contentMode = .scaleAspectFill
+        profileImageView.clipsToBounds = true
+        return profileImageView
+    }()
+    
+    // MARK: - life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureNavigationBarUI()
-        redirectLoginController()
     }
+    
+    // MARK: - Functions
+    func setUserProfileImage(profileUrl:String){
+        
+        guard let url = URL(string: profileUrl) else { return }
+        self.userProfileImageView.sd_setImage(with: url, completed: nil)
+        
+    }
+    
     
     // MARK: - Configure UI
     
@@ -26,14 +54,9 @@ class FeedController: UIViewController {
         navigationController?.navigationBar.titleTextAttributes = textAttributes
         navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationItem.title = "Treduler Twit"
-    }
-    
-    // MARK: - Functions
-    
-    func redirectLoginController(){
-        let loginVC = UINavigationController(rootViewController: LoginController())
-        loginVC.modalPresentationStyle = .fullScreen
-        self.present(loginVC, animated: false, completion: nil)
+        
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: userProfileImageView)
     }
 
 }

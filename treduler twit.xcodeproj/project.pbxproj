@@ -3,10 +3,16 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21D4605B80FD4BBE6745CF12 /* Pods_treduler_twit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B8A93CB4A51B4FFEFD790E9 /* Pods_treduler_twit.framework */; };
+		700D29BB24129235008C1402 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700D29BA24129235008C1402 /* UserService.swift */; };
+		700D29C0241294AB008C1402 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700D29BF241294AB008C1402 /* User.swift */; };
+		700D29C22412A16A008C1402 /* UploadTweetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700D29C12412A16A008C1402 /* UploadTweetController.swift */; };
+		700D29C52412AD2E008C1402 /* CaptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700D29C42412AD2E008C1402 /* CaptionTextView.swift */; };
+		700D29C72412B5C3008C1402 /* TweetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700D29C62412B5C3008C1402 /* TweetService.swift */; };
 		701435CB24114B4C00CCAAFB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435CA24114B4C00CCAAFB /* AppDelegate.swift */; };
 		701435CD24114B4C00CCAAFB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435CC24114B4C00CCAAFB /* SceneDelegate.swift */; };
 		701435D224114B4C00CCAAFB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 701435D024114B4C00CCAAFB /* Main.storyboard */; };
@@ -20,9 +26,16 @@
 		701435EB24115A2F00CCAAFB /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435EA24115A2F00CCAAFB /* Extension.swift */; };
 		701435ED24115C3B00CCAAFB /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435EC24115C3B00CCAAFB /* LoginController.swift */; };
 		701435EF24115C7B00CCAAFB /* SignUpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 701435EE24115C7B00CCAAFB /* SignUpController.swift */; };
+		70CA7D0E241245DF00855997 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 70CA7D0D241245DF00855997 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6B8A93CB4A51B4FFEFD790E9 /* Pods_treduler_twit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_treduler_twit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		700D29BA24129235008C1402 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		700D29BF241294AB008C1402 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		700D29C12412A16A008C1402 /* UploadTweetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadTweetController.swift; sourceTree = "<group>"; };
+		700D29C42412AD2E008C1402 /* CaptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionTextView.swift; sourceTree = "<group>"; };
+		700D29C62412B5C3008C1402 /* TweetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetService.swift; sourceTree = "<group>"; };
 		701435C724114B4C00CCAAFB /* treduler twit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "treduler twit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		701435CA24114B4C00CCAAFB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		701435CC24114B4C00CCAAFB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -38,6 +51,9 @@
 		701435EA24115A2F00CCAAFB /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		701435EC24115C3B00CCAAFB /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
 		701435EE24115C7B00CCAAFB /* SignUpController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpController.swift; sourceTree = "<group>"; };
+		70CA7D0D241245DF00855997 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		7936AD7784679822046709B9 /* Pods-treduler twit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-treduler twit.debug.xcconfig"; path = "Target Support Files/Pods-treduler twit/Pods-treduler twit.debug.xcconfig"; sourceTree = "<group>"; };
+		BF742B22756C6549F224054F /* Pods-treduler twit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-treduler twit.release.xcconfig"; path = "Target Support Files/Pods-treduler twit/Pods-treduler twit.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,17 +61,54 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21D4605B80FD4BBE6745CF12 /* Pods_treduler_twit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F2EE6D786FC0065052B7EFF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7936AD7784679822046709B9 /* Pods-treduler twit.debug.xcconfig */,
+				BF742B22756C6549F224054F /* Pods-treduler twit.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		700D29B7241281FD008C1402 /* APIs */ = {
+			isa = PBXGroup;
+			children = (
+				700D29BA24129235008C1402 /* UserService.swift */,
+				700D29C62412B5C3008C1402 /* TweetService.swift */,
+			);
+			path = APIs;
+			sourceTree = "<group>";
+		};
+		700D29BE241294A1008C1402 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				700D29BF241294AB008C1402 /* User.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		700D29C32412AD15008C1402 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				700D29C42412AD2E008C1402 /* CaptionTextView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		701435BE24114B4B00CCAAFB = {
 			isa = PBXGroup;
 			children = (
 				701435C924114B4C00CCAAFB /* treduler twit */,
 				701435C824114B4C00CCAAFB /* Products */,
+				1F2EE6D786FC0065052B7EFF /* Pods */,
+				A318E60A2B2958BDF1D74632 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,6 +123,9 @@
 		701435C924114B4C00CCAAFB /* treduler twit */ = {
 			isa = PBXGroup;
 			children = (
+				700D29C32412AD15008C1402 /* View */,
+				700D29BE241294A1008C1402 /* Model */,
+				700D29B7241281FD008C1402 /* APIs */,
 				701435E924115A1D00CCAAFB /* Utils */,
 				701435DE24114B8C00CCAAFB /* Controllers */,
 				701435CA24114B4C00CCAAFB /* AppDelegate.swift */,
@@ -78,6 +134,7 @@
 				701435D324114B5100CCAAFB /* Assets.xcassets */,
 				701435D524114B5100CCAAFB /* LaunchScreen.storyboard */,
 				701435D824114B5100CCAAFB /* Info.plist */,
+				70CA7D0D241245DF00855997 /* GoogleService-Info.plist */,
 			);
 			path = "treduler twit";
 			sourceTree = "<group>";
@@ -92,6 +149,7 @@
 				701435E72411506D00CCAAFB /* ExploreController.swift */,
 				701435EC24115C3B00CCAAFB /* LoginController.swift */,
 				701435EE24115C7B00CCAAFB /* SignUpController.swift */,
+				700D29C12412A16A008C1402 /* UploadTweetController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -104,6 +162,14 @@
 			path = Utils;
 			sourceTree = "<group>";
 		};
+		A318E60A2B2958BDF1D74632 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6B8A93CB4A51B4FFEFD790E9 /* Pods_treduler_twit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -111,9 +177,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 701435DB24114B5100CCAAFB /* Build configuration list for PBXNativeTarget "treduler twit" */;
 			buildPhases = (
+				C87C10DD3F74E1E685D0D72C /* [CP] Check Pods Manifest.lock */,
 				701435C324114B4C00CCAAFB /* Sources */,
 				701435C424114B4C00CCAAFB /* Frameworks */,
 				701435C524114B4C00CCAAFB /* Resources */,
+				88F43732759F5BA2A6F84140 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -163,12 +231,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				701435D724114B5100CCAAFB /* LaunchScreen.storyboard in Resources */,
+				70CA7D0E241245DF00855997 /* GoogleService-Info.plist in Resources */,
 				701435D424114B5100CCAAFB /* Assets.xcassets in Resources */,
 				701435D224114B4C00CCAAFB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		88F43732759F5BA2A6F84140 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-treduler twit/Pods-treduler twit-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-treduler twit/Pods-treduler twit-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-treduler twit/Pods-treduler twit-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C87C10DD3F74E1E685D0D72C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-treduler twit-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		701435C324114B4C00CCAAFB /* Sources */ = {
@@ -177,14 +288,19 @@
 			files = (
 				701435E42411504300CCAAFB /* NotificationController.swift in Sources */,
 				701435CB24114B4C00CCAAFB /* AppDelegate.swift in Sources */,
+				700D29C22412A16A008C1402 /* UploadTweetController.swift in Sources */,
 				701435E82411506D00CCAAFB /* ExploreController.swift in Sources */,
 				701435E024114BA800CCAAFB /* MainTabBarController.swift in Sources */,
 				701435ED24115C3B00CCAAFB /* LoginController.swift in Sources */,
 				701435EF24115C7B00CCAAFB /* SignUpController.swift in Sources */,
+				700D29BB24129235008C1402 /* UserService.swift in Sources */,
 				701435CD24114B4C00CCAAFB /* SceneDelegate.swift in Sources */,
+				700D29C0241294AB008C1402 /* User.swift in Sources */,
 				701435E62411505200CCAAFB /* ConversationController.swift in Sources */,
 				701435E22411503300CCAAFB /* FeedController.swift in Sources */,
+				700D29C52412AD2E008C1402 /* CaptionTextView.swift in Sources */,
 				701435EB24115A2F00CCAAFB /* Extension.swift in Sources */,
+				700D29C72412B5C3008C1402 /* TweetService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,9 +442,11 @@
 		};
 		701435DC24114B5100CCAAFB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7936AD7784679822046709B9 /* Pods-treduler twit.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "treduler twit/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -343,9 +461,11 @@
 		};
 		701435DD24114B5100CCAAFB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BF742B22756C6549F224054F /* Pods-treduler twit.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = "treduler twit/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

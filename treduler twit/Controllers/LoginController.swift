@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginController: UIViewController {
     
@@ -50,6 +51,11 @@ class LoginController: UIViewController {
         return label
     }()
     
+    private lazy var emailTextField:UITextField = {
+        let tf = UITextField()
+        return tf
+    }()
+    
     private lazy var emailTextFieldContainer:UIView = {
         let view = UIView()
         
@@ -64,18 +70,18 @@ class LoginController: UIViewController {
         imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -6).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
         
-        let textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(string: "email@gmail.com",
+        
+        emailTextField.attributedPlaceholder = NSAttributedString(string: "email@gmail.com",
         attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        textField.tintColor = .white
-        textField.backgroundColor = .clear
-        textField.textColor = .white
-        textField.autocapitalizationType = .none
-        view.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8).isActive = true
-        textField.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 8).isActive = true
-        textField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        emailTextField.tintColor = .white
+        emailTextField.backgroundColor = .clear
+        emailTextField.textColor = .white
+        emailTextField.autocapitalizationType = .none
+        view.addSubview(self.emailTextField)
+        emailTextField.translatesAutoresizingMaskIntoConstraints = false
+        emailTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8).isActive = true
+        emailTextField.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 8).isActive = true
+        emailTextField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         let divider = UIView()
         divider.backgroundColor = .white
@@ -89,6 +95,10 @@ class LoginController: UIViewController {
         
         
         return view
+    }()
+    
+    private lazy var passwordTextField:UITextField = {
+        return UITextField()
     }()
     
     private lazy var passwordTextFieldContainer:UIView = {
@@ -105,19 +115,19 @@ class LoginController: UIViewController {
         imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 3).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 25).isActive = true
         
-        let textField = UITextField()
-        textField.attributedPlaceholder = NSAttributedString(string: "password",
+        
+        passwordTextField.attributedPlaceholder = NSAttributedString(string: "password",
         attributes: [NSAttributedString.Key.foregroundColor: UIColor.white])
-        textField.isSecureTextEntry = true
-        textField.tintColor = .white
-        textField.backgroundColor = .clear
-        textField.autocapitalizationType = .none
-        textField.textColor = .white
-        view.addSubview(textField)
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8).isActive = true
-        textField.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 8).isActive = true
-        textField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
+        passwordTextField.isSecureTextEntry = true
+        passwordTextField.tintColor = .white
+        passwordTextField.backgroundColor = .clear
+        passwordTextField.autocapitalizationType = .none
+        passwordTextField.textColor = .white
+        view.addSubview(self.passwordTextField)
+        passwordTextField.translatesAutoresizingMaskIntoConstraints = false
+        passwordTextField.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -8).isActive = true
+        passwordTextField.leftAnchor.constraint(equalTo: imageView.rightAnchor, constant: 8).isActive = true
+        passwordTextField.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = true
         
         let divider = UIView()
         divider.backgroundColor = .white
@@ -163,6 +173,11 @@ class LoginController: UIViewController {
     }()
     
     
+    private lazy var loadingIndicator:UIActivityIndicatorView = {
+        let iv = UIActivityIndicatorView(style: UIActivityIndicatorView.Style.large)
+        return iv
+    }()
+    
     
     
     // MARK: - life circle
@@ -188,8 +203,44 @@ class LoginController: UIViewController {
         navigationController?.pushViewController(signUpVC, animated: true)
     }
     
+    func presentAlert(title:String, message:String){
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     @objc func loginButtonTapped(){
-        print("login button tapped")
+        self.loginButton.isEnabled = false
+        self.loadingIndicator.startAnimating()
+        
+        
+        guard let email = self.emailTextField.text,
+            let password = self.passwordTextField.text else {
+                self.presentAlert(title: "Warning", message: "Please fill all form")
+                self.loginButton.isEnabled = true
+                self.loadingIndicator.stopAnimating()
+                return
+            }
+            
+        Auth.auth().signIn(withEmail: email, password: password) { (result, error) in
+            if let error = error {
+                self.presentAlert(title: "Warning", message: error.localizedDescription)
+                self.loginButton.isEnabled = true
+                self.loadingIndicator.stopAnimating()
+            }else {
+                guard let viewController = UIApplication.shared.connectedScenes
+                .filter({$0.activationState == .foregroundActive})
+                .map({$0 as? UIWindowScene})
+                .compactMap({$0})
+                .first?.windows
+                    .filter({$0.isKeyWindow}).first?.rootViewController as? MainTabBarController else {
+                    print("fail to retrieve view controller")
+                    return
+                }
+                viewController.checkUserLoggedIn()
+                self.dismiss(animated: true, completion: nil)
+            }
+        }
     }
     
     
@@ -258,6 +309,12 @@ class LoginController: UIViewController {
         SignUpButton.translatesAutoresizingMaskIntoConstraints = false
         SignUpButton.leftAnchor.constraint(equalTo: signupLabel.rightAnchor, constant: 12).isActive = true
         SignUpButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 1).isActive = true
+        
+        
+        view.addSubview(loadingIndicator)
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         
         
     }
