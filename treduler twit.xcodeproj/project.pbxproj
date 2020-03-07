@@ -29,6 +29,8 @@
 		70CA7D0E241245DF00855997 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 70CA7D0D241245DF00855997 /* GoogleService-Info.plist */; };
 		70FAD11C2413989900F41DA2 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FAD11B2413989900F41DA2 /* Tweet.swift */; };
 		70FAD11E24139FCE00F41DA2 /* TweetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FAD11D24139FCE00F41DA2 /* TweetCell.swift */; };
+		70FAD1202413CA3000F41DA2 /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FAD11F2413CA3000F41DA2 /* ProfileController.swift */; };
+		70FAD1222413CE5A00F41DA2 /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70FAD1212413CE5A00F41DA2 /* ProfileHeader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		70CA7D0D241245DF00855997 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		70FAD11B2413989900F41DA2 /* Tweet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
 		70FAD11D24139FCE00F41DA2 /* TweetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetCell.swift; sourceTree = "<group>"; };
+		70FAD11F2413CA3000F41DA2 /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		70FAD1212413CE5A00F41DA2 /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		7936AD7784679822046709B9 /* Pods-treduler twit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-treduler twit.debug.xcconfig"; path = "Target Support Files/Pods-treduler twit/Pods-treduler twit.debug.xcconfig"; sourceTree = "<group>"; };
 		BF742B22756C6549F224054F /* Pods-treduler twit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-treduler twit.release.xcconfig"; path = "Target Support Files/Pods-treduler twit/Pods-treduler twit.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -104,6 +108,7 @@
 			children = (
 				700D29C42412AD2E008C1402 /* CaptionTextView.swift */,
 				70FAD11D24139FCE00F41DA2 /* TweetCell.swift */,
+				70FAD1212413CE5A00F41DA2 /* ProfileHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -156,6 +161,7 @@
 				701435EC24115C3B00CCAAFB /* LoginController.swift */,
 				701435EE24115C7B00CCAAFB /* SignUpController.swift */,
 				700D29C12412A16A008C1402 /* UploadTweetController.swift */,
+				70FAD11F2413CA3000F41DA2 /* ProfileController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -293,10 +299,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				701435E42411504300CCAAFB /* NotificationController.swift in Sources */,
+				70FAD1222413CE5A00F41DA2 /* ProfileHeader.swift in Sources */,
 				701435CB24114B4C00CCAAFB /* AppDelegate.swift in Sources */,
 				700D29C22412A16A008C1402 /* UploadTweetController.swift in Sources */,
 				70FAD11E24139FCE00F41DA2 /* TweetCell.swift in Sources */,
 				701435E82411506D00CCAAFB /* ExploreController.swift in Sources */,
+				70FAD1202413CA3000F41DA2 /* ProfileController.swift in Sources */,
 				701435E024114BA800CCAAFB /* MainTabBarController.swift in Sources */,
 				701435ED24115C3B00CCAAFB /* LoginController.swift in Sources */,
 				701435EF24115C7B00CCAAFB /* SignUpController.swift in Sources */,

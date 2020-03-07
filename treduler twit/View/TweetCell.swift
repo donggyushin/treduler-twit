@@ -9,15 +9,22 @@
 import UIKit
 import SDWebImage
 
+protocol TweetCellDelegate:class {
+    func profileImageTapped(cell:TweetCell)
+}
+
 class TweetCell: UICollectionViewCell {
     
+    
+    
+    // MARK: - properties
     var tweet:Tweet? {
         didSet {
             configure()
         }
     }
     
-    // MARK: - properties
+    weak var delegate:TweetCellDelegate?
     
     lazy var profileImageView:UIImageView = {
         let iv = UIImageView()
@@ -26,6 +33,9 @@ class TweetCell: UICollectionViewCell {
         iv.widthAnchor.constraint(equalToConstant: 46).isActive = true
         iv.heightAnchor.constraint(equalToConstant: 46).isActive = true
         iv.layer.cornerRadius = 23
+        let tap = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
+        iv.addGestureRecognizer(tap)
+        iv.isUserInteractionEnabled = true
         return iv
     }()
     
@@ -130,6 +140,12 @@ class TweetCell: UICollectionViewCell {
         nameLabel.text = tweet.user.name
         timeLabel.text = ". " + tweet.timestamp.getElapsedInterval()
         
+    }
+    
+    // MARK: - selectors
+    
+    @objc func profileImageTapped(){
+        delegate?.profileImageTapped(cell:self)
     }
     
     // MARK: - configure ui
