@@ -12,6 +12,9 @@ import Firebase
 
 protocol ProfileHeaderDelegate:class {
     func navBackTapped()
+    func presenterAlert(title:String, message:String)
+    func goToFollowers(cell:ProfileHeader)
+    func goToFollowing(cell:ProfileHeader)
 }
 
 class ProfileHeader: UICollectionViewCell {
@@ -22,6 +25,7 @@ class ProfileHeader: UICollectionViewCell {
     var user:User? {
         didSet {
             config()
+            
         }
     }
     
@@ -90,10 +94,17 @@ class ProfileHeader: UICollectionViewCell {
         return label
     }()
     
+    var followingNumber = 0
+    
     lazy var followingNumberLabel:UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.text = "0"
+        label.text = "\(self.followingNumber)"
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(goToFollowing))
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(tap)
+        
         return label
     }()
     
@@ -102,12 +113,25 @@ class ProfileHeader: UICollectionViewCell {
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
         label.text = "following "
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(goToFollowing))
+        label.isUserInteractionEnabled = true
+        label.addGestureRecognizer(tap)
+        
         return label
     }()
+    
+    var followersNumber = 0
+    
     lazy var followerNumberLabel:UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 12)
-        label.text = "0"
+        label.text = "\(self.followersNumber)"
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(goToFollowers))
+        label.addGestureRecognizer(tap)
+        label.isUserInteractionEnabled = true
+        
         return label
     }()
     
@@ -115,8 +139,18 @@ class ProfileHeader: UICollectionViewCell {
         let label = UILabel()
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
-        label.text = "following "
+        label.text = "followers"
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(goToFollowers))
+        label.addGestureRecognizer(tap)
+        label.isUserInteractionEnabled = true
+        
         return label
+    }()
+    
+    lazy var loadingIndicator:UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        return indicator
     }()
     
     lazy var divider:UIView = {
@@ -137,6 +171,9 @@ class ProfileHeader: UICollectionViewCell {
     }
     
     // MARK: - helper
+    
+    
+    
     func config(){
         guard let user = self.user else { return }
         if let url = URL(string: user.profileImageUrl) {
@@ -144,15 +181,105 @@ class ProfileHeader: UICollectionViewCell {
         }
         nameLabel.text = user.name
         usernameLabel.text = "@" + user.username
+        UserService.shared.fetchFollowingAndFollowerNumbers(user: user) { (following, followers) in
+            self.followingNumber = following
+            self.followersNumber = followers
+            self.followingNumberLabel.text = "\(self.followingNumber)"
+            self.followerNumberLabel.text = "\(self.followersNumber)"
+        }
+        
         
         if user.uid == Auth.auth().currentUser!.uid {
-            editProfileButton.setTitle("Edit profile", for: .normal)
+            setEditProfileButton()
+            
         }else {
-            editProfileButton.setTitle("Follow", for: .normal)
+            checkIFollowThisUserOrNot()
         }
     }
     
+    func checkIFollowThisUserOrNot(){
+        guard let user = self.user else { return }
+        UserService.shared.checkIFollowThisUserOrNot(user: user) { (bool) in
+            if bool {
+                self.setFollowingButton()
+            }else {
+                self.setFollowButton()
+            }
+        }
+    }
+    
+    func setFollowingButton(){
+        editProfileButton.setTitle("Following", for: .normal)
+        editProfileButton.addTarget(self, action: #selector(followingButtonTapped), for: .touchUpInside)
+    }
+    
+    func setFollowButton(){
+        editProfileButton.setTitle("Follow", for: .normal)
+        editProfileButton.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
+    }
+    
+    func setEditProfileButton(){
+        editProfileButton.setTitle("Edit profile", for: .normal)
+        editProfileButton.addTarget(self, action: #selector(editProfileButtonTapped), for: .touchUpInside)
+    }
+    
+    func presentAlert(title:String, message:String){
+        delegate?.presenterAlert(title: title, message: message)
+    }
+    
     // MARK: - selectors
+    @objc func goToFollowing(){
+        delegate?.goToFollowing(cell: self)
+    }
+    
+    @objc func goToFollowers(){
+        delegate?.goToFollowers(cell: self)
+    }
+    
+    @objc func followingButtonTapped(){
+        editProfileButton.isEnabled = false
+        self.loadingIndicator.startAnimating()
+        guard let user = self.user else { return }
+        
+        UserService.shared.unfollowUser(user: user) { (error) in
+            if let error = error {
+                self.presentAlert(title: "Warning", message: error.localizedDescription)
+                self.editProfileButton.isEnabled = true
+                self.loadingIndicator.stopAnimating()
+            }else {
+                DispatchQueue.main.async {
+                    self.editProfileButton.isEnabled = true
+                    self.setFollowButton()
+                    self.loadingIndicator.stopAnimating()
+                }
+            }
+        }
+        
+    }
+    
+    @objc func followButtonTapped(){
+        self.loadingIndicator.startAnimating()
+        guard let user = self.user else { return }
+        editProfileButton.isEnabled = false
+        UserService.shared.followUser(user: user) { (error) in
+            
+            if let error = error {
+                self.presentAlert(title: "Warning", message: error.localizedDescription)
+                self.editProfileButton.isEnabled = true
+                self.loadingIndicator.stopAnimating()
+            }else {
+                DispatchQueue.main.async {
+                    self.editProfileButton.isEnabled = true
+                    self.setFollowingButton()
+                    self.loadingIndicator.stopAnimating()
+                }
+            }
+        }
+    }
+    
+    @objc func editProfileButtonTapped(){
+        print("edit profile button tapped")
+    }
     
     @objc func navBackTapped(){
         delegate?.navBackTapped()
@@ -206,6 +333,11 @@ class ProfileHeader: UICollectionViewCell {
         followStackView.leftAnchor.constraint(equalTo: bioLabel.leftAnchor, constant: 0).isActive = true
         followStackView.topAnchor.constraint(equalTo: bioLabel.bottomAnchor, constant: 4).isActive = true
         
+        
+        addSubview(loadingIndicator)
+        loadingIndicator.translatesAutoresizingMaskIntoConstraints = false
+        loadingIndicator.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        loadingIndicator.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         addSubview(divider)
         divider.translatesAutoresizingMaskIntoConstraints = false

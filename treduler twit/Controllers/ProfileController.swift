@@ -102,6 +102,24 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 
 
 extension ProfileController:ProfileHeaderDelegate {
+    func goToFollowing(cell: ProfileHeader) {
+        guard let user = cell.user else { return }
+        let followingVC = FollowingController(user: user)
+        navigationController?.pushViewController(followingVC, animated: true)
+    }
+    
+    func goToFollowers(cell: ProfileHeader) {
+        guard let user = cell.user else { return }
+        let followersVC = FollwersController(user: user)
+        navigationController?.pushViewController(followersVC, animated: true)
+    }
+    
+    func presenterAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
     func navBackTapped() {
         navigationController?.popViewController(animated: true)
     }
