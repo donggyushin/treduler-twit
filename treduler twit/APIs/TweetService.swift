@@ -20,4 +20,26 @@ struct TweetService {
                 completion(error, ref)
         })
     }
+    
+    func fetchTweets(completion:@escaping([Tweet]) -> Void){
+        
+        db.collection("tweets").addSnapshotListener { (querySnapshot, error) in
+            if let error = error {
+                print(error.localizedDescription)
+            }else {
+                var tweets = [Tweet]()
+                for document in querySnapshot!.documents {
+                    let data = document.data()
+                    guard let userId = data["userId"] as? String else { return }
+                    
+                    UserService.shared.fetchUserFromUid(userId: userId) { (user) in
+                        let tweet = Tweet(data: data, user: user)
+                        tweets.append(tweet)
+                        completion(tweets)
+                    }
+                }
+                
+            }
+        }
+    }
 }
