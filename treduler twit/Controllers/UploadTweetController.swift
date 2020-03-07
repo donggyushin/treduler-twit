@@ -98,23 +98,11 @@ class UploadTweetController: UIViewController {
             self.loadingIndicator.stopAnimating()
             self.uploadTweetButton.isEnabled = true
         }else {
-            TweetService.shared.postTweet(caption: caption) { (error, ref) in
+            TweetService.shared.postTweet(caption: caption) { (error) in
                 if let error = error {
                     self.presenterAlert(title: "Warning", message: error.localizedDescription)
-                    self.loadingIndicator.stopAnimating()
-                    self.uploadTweetButton.isEnabled = true
                 }else {
-                    self.db.collection("tweets").document(ref!.documentID).updateData([
-                        "id": ref!.documentID
-                    ]) { (error) in
-                        if let error = error {
-                            self.presenterAlert(title: "Warning", message: error.localizedDescription)
-                            self.loadingIndicator.stopAnimating()
-                            self.uploadTweetButton.isEnabled = true
-                        }else {
-                            self.dismiss(animated: true, completion: nil)
-                        }
-                    }
+                    self.dismiss(animated: true, completion: nil)
                 }
             }
         }

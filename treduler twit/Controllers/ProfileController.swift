@@ -13,7 +13,13 @@ private let headerIdentifier = "header"
 
 class ProfileController: UICollectionViewController {
     
+    // MARK: - properties
+    
     private let user:User
+    var tweets = [Tweet]() {
+        didSet {
+            collectionView.reloadData()        }
+    }
     
     // MARK: - life cycle
     
@@ -38,10 +44,21 @@ class ProfileController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        collectionView.alwaysBounceVertical = true 
         collectionView.backgroundColor = .white
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.register(ProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
+        collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        fetchTweets()
     }
+    
+    // MARK: - API
+    func fetchTweets(){
+        TweetService.shared.fetchTweets(user: self.user) { tweets in
+            self.tweets = tweets
+        }
+    }
+    
     
 }
 // MARK: - collectionview delegate
@@ -52,11 +69,34 @@ extension ProfileController {
         header.user = self.user
         return header
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.tweets.count
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
+        cell.tweet = tweets[indexPath.row]
+        return cell
+    }
+    
+    
 }
 
 extension ProfileController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
         return CGSize(width: view.frame.width, height: 300)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let tweet = tweets[indexPath.row]
+        let caption = tweet.caption
+        let height = caption.height(withConstrainedWidth: view.frame.width - 20 - 46 - 10 - 10, font: UIFont.systemFont(ofSize: 14))
+        return CGSize(width: view.frame.width, height: height + 93)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 1
     }
 }
 

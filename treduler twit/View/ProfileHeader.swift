@@ -8,6 +8,7 @@
 
 import UIKit
 import SDWebImage
+import Firebase
 
 protocol ProfileHeaderDelegate:class {
     func navBackTapped()
@@ -143,6 +144,12 @@ class ProfileHeader: UICollectionViewCell {
         }
         nameLabel.text = user.name
         usernameLabel.text = "@" + user.username
+        
+        if user.uid == Auth.auth().currentUser!.uid {
+            editProfileButton.setTitle("Edit profile", for: .normal)
+        }else {
+            editProfileButton.setTitle("Follow", for: .normal)
+        }
     }
     
     // MARK: - selectors

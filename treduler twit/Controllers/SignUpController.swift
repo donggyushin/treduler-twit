@@ -386,33 +386,52 @@ class SignUpController: UIViewController {
                                 self.signupButton.isEnabled = true
                                 self.activityView.stopAnimating()
                             }else {
-                                self.db.collection("users").document(result!.user.uid).setData([
-                                "email": email,
-                                "password": password1,
-                                "username": username,
-                                "name": name,
-                                "profileImageUrlString":downloadUrl,
-                                "uid": result!.user.uid
-                                    ], completion: { (error) in
-                                        if let error = error {
-                                            self.presenterAlert(title: "Warning", message: error.localizedDescription)
-                                            self.signupButton.isEnabled = true
-                                            self.activityView.stopAnimating()
-                                        }else {
-                                            // success sign up
-                                            guard let viewController = UIApplication.shared.connectedScenes
-                                            .filter({$0.activationState == .foregroundActive})
-                                            .map({$0 as? UIWindowScene})
-                                            .compactMap({$0})
-                                            .first?.windows
-                                                .filter({$0.isKeyWindow}).first?.rootViewController as? MainTabBarController else {
-                                                print("fail to retrieve view controller")
-                                                return
-                                            }
-                                            viewController.checkUserLoggedIn()
-                                            self.dismiss(animated: true, completion: nil)
+                                
+                                UserService.shared.newUser(email: email, password: password1, username: username, name: name, profileImageUrlString: downloadUrl, uid: result!.user.uid) { (error) in
+                                    if let error = error {
+                                        self.presenterAlert(title: "Warning", message: error.localizedDescription)
+                                    }else {
+                                        guard let viewController = UIApplication.shared.connectedScenes
+                                        .filter({$0.activationState == .foregroundActive})
+                                        .map({$0 as? UIWindowScene})
+                                        .compactMap({$0})
+                                        .first?.windows
+                                            .filter({$0.isKeyWindow}).first?.rootViewController as? MainTabBarController else {
+                                            print("fail to retrieve view controller")
+                                            return
                                         }
-                                })
+                                        viewController.checkUserLoggedIn()
+                                        self.dismiss(animated: true, completion: nil)
+                                    }
+                                }
+                                
+//                                self.db.collection("users").document(result!.user.uid).setData([
+//                                "email": email,
+//                                "password": password1,
+//                                "username": username,
+//                                "name": name,
+//                                "profileImageUrlString":downloadUrl,
+//                                "uid": result!.user.uid
+//                                    ], completion: { (error) in
+//                                        if let error = error {
+//                                            self.presenterAlert(title: "Warning", message: error.localizedDescription)
+//                                            self.signupButton.isEnabled = true
+//                                            self.activityView.stopAnimating()
+//                                        }else {
+//                                            // success sign up
+//                                            guard let viewController = UIApplication.shared.connectedScenes
+//                                            .filter({$0.activationState == .foregroundActive})
+//                                            .map({$0 as? UIWindowScene})
+//                                            .compactMap({$0})
+//                                            .first?.windows
+//                                                .filter({$0.isKeyWindow}).first?.rootViewController as? MainTabBarController else {
+//                                                print("fail to retrieve view controller")
+//                                                return
+//                                            }
+//                                            viewController.checkUserLoggedIn()
+//                                            self.dismiss(animated: true, completion: nil)
+//                                        }
+//                                })
                             }
                         }
                     }

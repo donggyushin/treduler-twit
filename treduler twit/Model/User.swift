@@ -14,6 +14,7 @@ struct User {
     let username:String
     let uid:String
     let name:String
+    let tweetIds:[String]
     
     init(data:[String:Any]) {
         let profileImageUrl = data["profileImageUrlString"] as? String ?? ""
@@ -21,11 +22,13 @@ struct User {
         let username = data["username"] as? String ?? ""
         let uid = data["uid"] as? String ?? ""
         let name = data["name"] as? String ?? ""
+        let tweetIds = data["tweetIds"] as? [String] ?? []
         
         self.profileImageUrl = profileImageUrl
         self.email = email
         self.username = username
         self.uid = uid
-        self.name = name 
+        self.name = name
+        self.tweetIds = tweetIds
     }
 }

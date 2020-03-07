@@ -61,16 +61,15 @@ class MainTabBarController: UITabBarController {
     
     // MARK: - selectors
     @objc func actionButtonTapped(){
+//        try! Auth.auth().signOut()
+//        let loginVC = UINavigationController(rootViewController: LoginController())
+//        loginVC.modalPresentationStyle = .fullScreen
+//        self.present(loginVC, animated: true, completion: nil)
         guard let user = self.user else { return }
         let uploadTweetController = UINavigationController(rootViewController: UploadTweetController(user: user))
         uploadTweetController.modalPresentationStyle = .fullScreen
         present(uploadTweetController, animated: true, completion: nil)
         
-        
-//        try! Auth.auth().signOut()
-//        let loginVC = UINavigationController(rootViewController: LoginController())
-//        loginVC.modalPresentationStyle = .fullScreen
-//        self.present(loginVC, animated: true, completion: nil)
     }
     
     
@@ -91,7 +90,7 @@ class MainTabBarController: UITabBarController {
         let feedVC = UINavigationController(rootViewController: FeedController(collectionViewLayout: UICollectionViewFlowLayout()))
         let notificationVC = UINavigationController(rootViewController: NotificationController())
         let conversationVC = UINavigationController(rootViewController: ConversationController())
-        let exploreVC = UINavigationController(rootViewController: ExploreController())
+        let exploreVC = UINavigationController(rootViewController: ExploreController(collectionViewLayout: UICollectionViewFlowLayout()))
         
         feedVC.navigationBar.barTintColor = .white
         notificationVC.navigationBar.barTintColor = .white
