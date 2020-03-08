@@ -116,6 +116,18 @@ extension FeedController:UICollectionViewDelegateFlowLayout {
 
 
 extension FeedController:TweetCellDelegate {
+    func goToReplyController(cell: TweetCell) {
+        guard let tweet = cell.tweet else { return }
+        let replyVC = ReplyController(tweet: tweet)
+        navigationController?.pushViewController(replyVC, animated: true)
+    }
+    
+    func captionTapped(cell: TweetCell) {
+        guard let tweet = cell.tweet else { return }
+        let tweetVC = TweetController(tweet: tweet)
+        navigationController?.pushViewController(tweetVC, animated: true)
+    }
+    
     func profileImageTapped(cell: TweetCell) {
         guard let user = cell.tweet?.user else { return }
         let profileVC = ProfileController(user: user)

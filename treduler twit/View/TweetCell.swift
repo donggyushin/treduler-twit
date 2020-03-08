@@ -11,11 +11,11 @@ import SDWebImage
 
 protocol TweetCellDelegate:class {
     func profileImageTapped(cell:TweetCell)
+    func captionTapped(cell:TweetCell)
+    func goToReplyController(cell:TweetCell)
 }
 
 class TweetCell: UICollectionViewCell {
-    
-    
     
     // MARK: - properties
     var tweet:Tweet? {
@@ -67,6 +67,9 @@ class TweetCell: UICollectionViewCell {
         label.numberOfLines = 0
         label.font = UIFont.systemFont(ofSize: 14)
         label.lineBreakMode = .byWordWrapping
+        label.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(captionTapped))
+        label.addGestureRecognizer(tap)
         return label
     }()
     
@@ -77,6 +80,9 @@ class TweetCell: UICollectionViewCell {
         iv.widthAnchor.constraint(equalToConstant: 16).isActive = true
         iv.heightAnchor.constraint(equalToConstant: 16).isActive = true
         iv.contentMode = .scaleAspectFit
+        iv.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(goToReply))
+        iv.addGestureRecognizer(tap)
         return iv
     }()
     
@@ -143,6 +149,14 @@ class TweetCell: UICollectionViewCell {
     }
     
     // MARK: - selectors
+    
+    @objc func goToReply(){
+        delegate?.goToReplyController(cell: self)
+    }
+    
+    @objc func captionTapped(){
+        delegate?.captionTapped(cell: self)
+    }
     
     @objc func profileImageTapped(){
         delegate?.profileImageTapped(cell:self)

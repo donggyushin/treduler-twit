@@ -37,6 +37,7 @@ struct UserService {
     }
     
     func fetchFollwers(user:User, completion:@escaping([User]) -> Void){
+        
         db.collection("users").document(user.uid).addSnapshotListener { (querySnapshot, error) in
             if let error = error {
                 print(error.localizedDescription)
@@ -45,10 +46,12 @@ struct UserService {
                 let followers = data["followers"] as? [String] ?? []
                 var users = [User]()
                 for follower in followers {
+                    print("follower id: ", follower)
                     self.db.collection("users").document(follower).getDocument { (querySnapshot, error) in
                         if let error = error {
                             print(error.localizedDescription)
                         }else {
+                            guard let data = querySnapshot!.data() else { return }
                             let user = User(data: data)
                             users.append(user)
                             completion(users)
