@@ -12,8 +12,6 @@ private let reuseIdentifier = "Cell"
 private let reuseHeaderIdentifier = "TweetHeaderasd"
 
 class TweetController: UICollectionViewController {
-
-    
     private let tweet:Tweet
     
     // MARK: - Life cycles

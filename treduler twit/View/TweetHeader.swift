@@ -29,6 +29,7 @@ class TweetHeader: UICollectionReusableView {
     private var user:User? {
         didSet {
             configureUser()
+            listenRetweetNumbers()
         }
     }
     
@@ -79,7 +80,7 @@ class TweetHeader: UICollectionReusableView {
     
     lazy var dateLabel:UILabel = {
         let label = UILabel()
-        label.text = "PM 9:04 6.3.2020"
+        label.text = ""
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 14)
         return label
@@ -200,11 +201,23 @@ class TweetHeader: UICollectionReusableView {
     
     func configureTweet(){
         guard let tweet = tweet else { return }
+        
         captionLabel.text = tweet.caption
         dateLabel.text = tweet.timestamp.toFormat("dd MMM yyyy 'at' HH:mm")
         
         UserService.shared.fetchUserFromUid(userId: tweet.userId) { (user) in
             self.user = user
+        }
+    }
+    
+    func listenRetweetNumbers(){
+        guard let tweet = tweet else { return }
+        guard let user = user else { return }
+        TweetService.shared.fetchTweet(id: tweet.id, writer: user) { (tweet) in
+            DispatchQueue.main.async {
+                self.retweetNumber = tweet.replieTweets.count
+                self.retweetNumberLabel.text = "\(self.retweetNumber)"
+            }
         }
     }
     

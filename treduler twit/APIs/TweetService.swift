@@ -12,6 +12,38 @@ struct TweetService {
     static let shared = TweetService()
     let db = Firestore.firestore()
     
+    func fetchTweet(id:String, writer:User, completion:@escaping(Tweet) -> Void) {
+        db.collection("tweets").document(id).addSnapshotListener { (querySnapshot, error) in
+            if let error = error {
+                print(error.localizedDescription)
+            }else {
+                guard let data = querySnapshot!.data() else { return }
+                let tweet = Tweet(data: data, user: writer)
+                completion(tweet)
+            }
+        }
+    }
+    
+    func replyTweet(caption:String, parentTweet:Tweet, completion:@escaping(Error?) -> Void){
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        var ref:DocumentReference?
+        ref = db.collection("tweets").addDocument(data: [
+            "userId": uid, "caption": caption,
+            "likes": 0, "retweets": 0,
+            "timestamp" : Int(Date().timeIntervalSince1970),
+            "parentTweetId": parentTweet.id
+        ]) { (error) in
+            if let error = error {
+                print(error.localizedDescription)
+            }else {
+                guard let id = ref?.documentID else { return }
+                self.db.collection("tweets").document(parentTweet.id).updateData([
+                    "replieTweets":FieldValue.arrayUnion([id])
+                ], completion: completion)
+            }
+        }
+    }
+    
     func postTweet(caption:String, completion:@escaping(Error?) -> Void){
         guard let uid = Auth.auth().currentUser?.uid else { return }
         var ref:DocumentReference?

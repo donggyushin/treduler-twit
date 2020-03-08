@@ -16,6 +16,7 @@ struct Tweet {
     let timestamp:Date
     let userId:String
     let user:User
+    let replieTweets:[String]
     
     
     init(data:[String:Any], user:User) {
@@ -25,6 +26,7 @@ struct Tweet {
         let likes = data["likes"] as? Int ?? 0
         let retweets = data["retweets"] as? Int ?? 0
         let id = data["id"] as? String ?? ""
+        let replieTweets = data["replieTweets"] as? [String] ?? []
         
         let timestamp = Date(timeIntervalSince1970: TimeInterval(timeinterval))
         
@@ -35,6 +37,7 @@ struct Tweet {
         self.likes = likes
         self.retweets = retweets
         self.user = user
+        self.replieTweets = replieTweets
     }
     
 }
