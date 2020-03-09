@@ -61,11 +61,9 @@ class MainTabBarController: UITabBarController {
     
     // MARK: - selectors
     @objc func actionButtonTapped(){
-//        try! Auth.auth().signOut()
-//        let loginVC = UINavigationController(rootViewController: LoginController())
-//        loginVC.modalPresentationStyle = .fullScreen
-//        self.present(loginVC, animated: true, completion: nil)
+
         guard let user = self.user else { return }
+        
         let uploadTweetController = UINavigationController(rootViewController: UploadTweetController(user: user))
         uploadTweetController.modalPresentationStyle = .fullScreen
         present(uploadTweetController, animated: true, completion: nil)
@@ -76,6 +74,8 @@ class MainTabBarController: UITabBarController {
     // MARK: - configure
     
     func configureMainTabBarUI(){
+        
+        
         self.view.addSubview(actionButton)
         actionButton.translatesAutoresizingMaskIntoConstraints = false
         actionButton.widthAnchor.constraint(equalToConstant: 50).isActive = true
@@ -83,6 +83,8 @@ class MainTabBarController: UITabBarController {
         actionButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         actionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -65).isActive = true
         actionButton.layer.cornerRadius = 25
+        
+        
     }
     
     

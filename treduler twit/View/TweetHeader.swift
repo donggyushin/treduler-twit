@@ -12,6 +12,13 @@ import SwiftDate
 
 protocol TweetHeaderDelegate:class {
     func goToReplyController(cell:TweetHeader)
+    
+    func presenterAlert(title:String, message:String)
+    
+    func goToLikeController(cell:TweetHeader)
+    
+    func goToProfileVC(cell:TweetHeader)
+    
 }
 
 class TweetHeader: UICollectionReusableView {
@@ -23,15 +30,18 @@ class TweetHeader: UICollectionReusableView {
     var tweet:Tweet? {
         didSet {
             configureTweet()
+            checkILikeThisTweet()
+            listenRetweetNumbers()
+            fetchUser()
         }
     }
     
-    private var user:User? {
+    var user:User? {
         didSet {
             configureUser()
-            listenRetweetNumbers()
         }
     }
+    
     
     lazy var profileImageView:UIImageView = {
         let iv = UIImageView()
@@ -40,6 +50,9 @@ class TweetHeader: UICollectionReusableView {
         iv.heightAnchor.constraint(equalToConstant: 50).isActive = true
         iv.layer.cornerRadius = 25
         iv.clipsToBounds = true
+        iv.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(profileImageTapped))
+        iv.addGestureRecognizer(tap)
         return iv
     }()
     
@@ -117,6 +130,9 @@ class TweetHeader: UICollectionReusableView {
         label.text = "likes"
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .darkGray
+        label.isUserInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: #selector(likeLabelTapped))
+        label.addGestureRecognizer(tap)
         return label
     }()
     
@@ -158,6 +174,7 @@ class TweetHeader: UICollectionReusableView {
         iv.contentMode = .scaleAspectFit
         iv.widthAnchor.constraint(equalToConstant: 20).isActive = true
         iv.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        iv.isUserInteractionEnabled = true
         return iv
     }()
     
@@ -183,7 +200,98 @@ class TweetHeader: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: Apis
+    
+    func fetchUser(){
+        guard let tweet = tweet else { return }
+        UserService.shared.fetchUserFromUid(userId: tweet.userId) { (user) in
+            self.user = user
+        }
+    }
+    
+    
+    // MARK: - helpers
+    
+    func checkILikeThisTweet(){
+        guard let tweet = self.tweet else { return }
+        TweetService.shared.checkILikeThisTweet(tweetId: tweet.id) { (bool) in
+            if bool {
+                self.likeButton.image = #imageLiteral(resourceName: "like_filled")
+                self.likeButton.tintColor = .systemRed
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.colorfulHeartTapped))
+                self.likeButton.addGestureRecognizer(tap)
+                self.likeButton.isUserInteractionEnabled = true
+            }else {
+                self.likeButton.image = #imageLiteral(resourceName: "like")
+                self.likeButton.tintColor = .black
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.emptyHeartTapped))
+                self.likeButton.addGestureRecognizer(tap)
+                self.likeButton.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
+    func presentAlert(title:String, message:String){
+        delegate?.presenterAlert(title: title, message: message)
+    }
+    
+    
     // MARK: - selectors
+    
+    @objc func profileImageTapped(){
+        delegate?.goToProfileVC(cell: self)
+    }
+    
+    @objc func likeLabelTapped(){
+        delegate?.goToLikeController(cell: self)
+    }
+    
+    @objc func emptyHeartTapped(){
+        guard let tweet = self.tweet else { return }
+        self.likeButton.isUserInteractionEnabled = false
+        self.likeButton.image = #imageLiteral(resourceName: "like_filled")
+        self.likeButton.tintColor = .systemRed
+        TweetService.shared.userLikeThisTweet(tweetId: tweet.id) { (error) in
+            if let error = error {
+                self.presentAlert(title: "Warning", message: error.localizedDescription)
+                self.likeButton.isUserInteractionEnabled = true
+                self.likeButton.image = #imageLiteral(resourceName: "like")
+                self.likeButton.tintColor = .black
+            }else {
+                
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.colorfulHeartTapped))
+                self.likeButton.addGestureRecognizer(tap)
+                self.likeButton.isUserInteractionEnabled = true
+            }
+        }
+        
+    }
+    
+    @objc func colorfulHeartTapped(){
+        guard let tweet = self.tweet else { return }
+        self.likeButton.isUserInteractionEnabled = false
+        self.likeButton.image = #imageLiteral(resourceName: "like")
+        self.likeButton.tintColor = .black
+        TweetService.shared.userUnlikeThisTweet(tweetId: tweet.id) { (error) in
+            if let error = error {
+                self.presentAlert(title: "Warning", message: error.localizedDescription)
+                self.likeButton.isUserInteractionEnabled = true
+                self.likeButton.image = #imageLiteral(resourceName: "like_filled")
+                self.likeButton.tintColor = .systemRed
+            }else {
+                
+                let tap = UITapGestureRecognizer(target: self, action: #selector(self.emptyHeartTapped))
+                self.likeButton.addGestureRecognizer(tap)
+                self.likeButton.isUserInteractionEnabled = true
+            }
+        }
+        
+        self.likeButton.image = #imageLiteral(resourceName: "like")
+        self.likeButton.tintColor = .black
+        let tap = UITapGestureRecognizer(target: self, action: #selector(emptyHeartTapped))
+        self.likeButton.addGestureRecognizer(tap)
+    }
+    
     @objc func goToReplyController(){
         delegate?.goToReplyController(cell: self)
     }
@@ -199,25 +307,25 @@ class TweetHeader: UICollectionReusableView {
         usernameLabel.text = "@" + user.username
     }
     
+    
+    
     func configureTweet(){
         guard let tweet = tweet else { return }
         
         captionLabel.text = tweet.caption
         dateLabel.text = tweet.timestamp.toFormat("dd MMM yyyy 'at' HH:mm")
-        
-        UserService.shared.fetchUserFromUid(userId: tweet.userId) { (user) in
-            self.user = user
-        }
+        self.retweetNumberLabel.text = "\(tweet.replieTweets.count)"
+
     }
+    
     
     func listenRetweetNumbers(){
         guard let tweet = tweet else { return }
-        guard let user = user else { return }
-        TweetService.shared.fetchTweet(id: tweet.id, writer: user) { (tweet) in
-            DispatchQueue.main.async {
-                self.retweetNumber = tweet.replieTweets.count
-                self.retweetNumberLabel.text = "\(self.retweetNumber)"
-            }
+        TweetService.shared.listenTweetLikesAndRetweetsNumber(tweetId: tweet.id) { (likeNumber, retweetNumber) in
+            self.retweetNumber = retweetNumber
+            self.likeNumber = likeNumber
+            self.retweetNumberLabel.text = "\(self.retweetNumber)"
+            self.likeNumberLabel.text = "\(self.likeNumber)"
         }
     }
     

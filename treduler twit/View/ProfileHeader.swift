@@ -228,6 +228,8 @@ class ProfileHeader: UICollectionViewCell {
     }
     
     // MARK: - selectors
+    
+    
     @objc func goToFollowing(){
         delegate?.goToFollowing(cell: self)
     }
@@ -288,6 +290,7 @@ class ProfileHeader: UICollectionViewCell {
     // MARK: configure ui
     func configure(){
         addSubview(navigationBarView)
+        
         navigationBarView.translatesAutoresizingMaskIntoConstraints = false
         navigationBarView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         navigationBarView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

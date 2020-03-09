@@ -14,6 +14,8 @@ class ReplyController: UIViewController {
     // MARK: - properties
     private let tweet:Tweet
     
+    var tweetVC:TweetController?
+    
     private var writer:User? {
         didSet {
             configureUser()
@@ -44,7 +46,6 @@ class ReplyController: UIViewController {
     
     lazy var myProfileImageView:UIImageView = {
         let iv = UIImageView()
-        iv.backgroundColor = .lightGray
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         iv.widthAnchor.constraint(equalToConstant: 48).isActive = true
@@ -82,8 +83,9 @@ class ReplyController: UIViewController {
     
     //MARK: - life cycles
     
-    init(tweet:Tweet) {
+    init(tweet:Tweet, tweetVC:TweetController?) {
         self.tweet = tweet
+        self.tweetVC = tweetVC
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -95,7 +97,7 @@ class ReplyController: UIViewController {
         super.viewDidLoad()
         configureUI()
         configureNav()
-        fetchUsers()
+        fetchMe()
     }
     
     // MARK: - helpers
@@ -120,6 +122,21 @@ class ReplyController: UIViewController {
             }else {
                 self.loadingIndicator.stopAnimating()
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
+                self.tweetVC?.fetchRetweets()
+                
+                if let rootVC = UIApplication.shared.connectedScenes
+                                    .filter({$0.activationState == .foregroundActive})
+                                    .map({$0 as? UIWindowScene})
+                                    .compactMap({$0})
+                                    .first?.windows
+                                        .filter({$0.isKeyWindow}).first?.rootViewController as? MainTabBarController {
+                                        if let nav = rootVC.viewControllers?[0] as? UINavigationController {
+                                            guard let feedVC = nav.viewControllers.first as? FeedController else { return }
+                                            feedVC.callFetchTweets()
+                                        }
+                                    }
+                
+                
                 self.navigationController?.popViewController(animated: true)
             }
         }
@@ -161,19 +178,17 @@ class ReplyController: UIViewController {
         
     }
     
-    func fetchUsers(){
-        UserService.shared.fetchUserFromUid(userId: tweet.userId) { (user) in
-            self.writer = user
-        }
-        UserService.shared.fetchUser { (user) in
-            self.me = user
-        }
-    }
     
     func configureMe(){
         guard let user = self.me else { return }
         if let url = URL(string: user.profileImageUrl) {
             myProfileImageView.sd_setImage(with: url, completed: nil)
+        }
+    }
+    
+    func fetchMe(){
+        UserService.shared.fetchUser { (user) in
+            self.me = user
         }
     }
     
@@ -190,7 +205,9 @@ class ReplyController: UIViewController {
 }
 
 extension ReplyController:UITextViewDelegate {
+    
     func textViewDidChange(_ textView: UITextView) {
         self.textViewPlaceholder.isHidden = !textView.text.isEmpty
     }
+    
 }

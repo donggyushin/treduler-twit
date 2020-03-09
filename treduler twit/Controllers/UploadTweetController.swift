@@ -15,6 +15,7 @@ class UploadTweetController: UIViewController {
     let db = Firestore.firestore()
     
     let user:User
+    
 
     // MARK: - properties
     
@@ -98,12 +99,28 @@ class UploadTweetController: UIViewController {
             self.loadingIndicator.stopAnimating()
             self.uploadTweetButton.isEnabled = true
         }else {
-            TweetService.shared.postTweet(caption: caption) { (error) in
-                if let error = error {
-                    self.presenterAlert(title: "Warning", message: error.localizedDescription)
-                }else {
+            TweetService.shared.postTweet(caption: caption) { (tweet) in
+                
+                    if let rootVC = UIApplication.shared.connectedScenes
+                    .filter({$0.activationState == .foregroundActive})
+                    .map({$0 as? UIWindowScene})
+                    .compactMap({$0})
+                    .first?.windows
+                        .filter({$0.isKeyWindow}).first?.rootViewController as? MainTabBarController {
+                        if let nav = rootVC.viewControllers?[0] as? UINavigationController {
+                            
+                            if let profileVC = nav.viewControllers.last as? ProfileController {
+                                profileVC.tweets.insert(tweet, at: 0)
+                            }
+                            
+                            guard let feedVC = nav.viewControllers.first as? FeedController else { return }
+                            feedVC.callFetchTweets()
+                            
+                            
+                        }
+                    }
                     self.dismiss(animated: true, completion: nil)
-                }
+                
             }
         }
     }

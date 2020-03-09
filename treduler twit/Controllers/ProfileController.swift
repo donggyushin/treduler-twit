@@ -35,6 +35,7 @@ class ProfileController: UICollectionViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -44,12 +45,19 @@ class ProfileController: UICollectionViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectionView.alwaysBounceVertical = true 
+        collectionView.alwaysBounceVertical = false
         collectionView.backgroundColor = .white
-        collectionView.contentInsetAdjustmentBehavior = .never
+        
+//        collectionView.contentInsetAdjustmentBehavior = .automatic
+        collectionView.contentInset.top = -(UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.safeAreaInsets.top ?? 0)
         collectionView.register(ProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
         collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         fetchTweets()
+    }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print(collectionView.contentInset)
     }
     
     // MARK: - API
@@ -77,6 +85,7 @@ extension ProfileController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! TweetCell
         cell.tweet = tweets[indexPath.row]
+        cell.delegate = self
         return cell
     }
     
@@ -102,6 +111,7 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 
 
 extension ProfileController:ProfileHeaderDelegate {
+    
     func goToFollowing(cell: ProfileHeader) {
         guard let user = cell.user else { return }
         let followingVC = FollowingController(user: user)
@@ -123,4 +133,30 @@ extension ProfileController:ProfileHeaderDelegate {
     func navBackTapped() {
         navigationController?.popViewController(animated: true)
     }
+}
+
+extension ProfileController:TweetCellDelegate {
+    func profileImageTapped(cell: TweetCell) {
+        guard let user = cell.user else { return }
+        let profileVC = ProfileController(user: user)
+        navigationController?.pushViewController(profileVC, animated: true)
+    }
+    
+    func captionTapped(cell: TweetCell) {
+        guard let tweet = cell.tweet else { return }
+        let tweetVC = TweetController(tweet: tweet)
+        navigationController?.pushViewController(tweetVC, animated: true)
+    }
+    
+    func goToReplyController(cell: TweetCell) {
+        guard let tweet = cell.tweet else { return }
+        let replyVC = ReplyController(tweet: tweet, tweetVC: nil)
+        navigationController?.pushViewController(replyVC, animated: true)
+    }
+    
+    func presentAlert(title: String, message: String) {
+        presenterAlert(title: title, message: message)
+    }
+    
+    
 }

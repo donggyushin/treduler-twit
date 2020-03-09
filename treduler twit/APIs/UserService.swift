@@ -12,6 +12,24 @@ struct UserService {
     static let shared = UserService()
     let db = Firestore.firestore()
     
+    func fetchUsersWhoLikedThisTweet(tweet:Tweet, completion:@escaping([User]) -> Void){
+        db.collection("tweets").document(tweet.id).addSnapshotListener { (querySnapshot, error) in
+            if let error = error {
+                print(error.localizedDescription)
+            }else {
+                var users = [User]()
+                guard let data = querySnapshot!.data() else { return }
+                let usersIdWhoLikedThisTweet = data["likeUsers"] as? [String] ?? []
+                for userId in usersIdWhoLikedThisTweet {
+                    UserService.shared.fetchUserFromUid(userId: userId) { (user) in
+                        users.append(user)
+                        completion(users)
+                    }
+                }
+            }
+        }
+    }
+    
     func fetchFollowings(user:User, completion:@escaping([User]) -> Void) {
         db.collection("users").document(user.uid).addSnapshotListener { (querySnapshot, error) in
             if let error = error {
@@ -165,6 +183,7 @@ struct UserService {
     }
     
     func fetchUserFromUid(userId:String, completion:@escaping(User) -> Void){
+        
         db.collection("users").document(userId).getDocument { (snapshot, error) in
             if let error = error {
                 print(error.localizedDescription)

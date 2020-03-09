@@ -15,11 +15,12 @@ private let reuseIdenrifierForTweetCell = "tweetCell"
 class FeedController: UICollectionViewController {
     
     // MARK: - properties
-    private var tweets = [Tweet]() {
+    var tweets = [Tweet]() {
         didSet {
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
+        
+            
+            self.collectionView.reloadData()
+            
         }
     }
     
@@ -36,6 +37,11 @@ class FeedController: UICollectionViewController {
         profileImageView.layer.cornerRadius = 16
         profileImageView.contentMode = .scaleAspectFill
         profileImageView.clipsToBounds = true
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(temperaryLogoutFunc))
+        profileImageView.isUserInteractionEnabled = true
+        profileImageView.addGestureRecognizer(tap)
+        
         return profileImageView
     }()
     
@@ -45,12 +51,27 @@ class FeedController: UICollectionViewController {
         super.viewDidLoad()
         collectionView.alwaysBounceVertical = true
         collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdenrifierForTweetCell)
-        
-        configureNavigationBarUI()
         callFetchTweets()
+        configureNavigationBarUI()
+        
     }
     
+    
+    
+    // MARK: - selectors
+    
+    @objc func temperaryLogoutFunc(){
+        try! Auth.auth().signOut()
+        let loginVC = UINavigationController(rootViewController: LoginController())
+        loginVC.modalPresentationStyle = .fullScreen
+        self.present(loginVC, animated: true, completion: nil)
+    }
+    
+    
     // MARK: - Functions
+    
+    
+    
     func setUserProfileImage(profileUrl:String){
         
         guard let url = URL(string: profileUrl) else { return }
@@ -116,9 +137,15 @@ extension FeedController:UICollectionViewDelegateFlowLayout {
 
 
 extension FeedController:TweetCellDelegate {
+    func presentAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+    
     func goToReplyController(cell: TweetCell) {
         guard let tweet = cell.tweet else { return }
-        let replyVC = ReplyController(tweet: tweet)
+        let replyVC = ReplyController(tweet: tweet, tweetVC: nil)
         navigationController?.pushViewController(replyVC, animated: true)
     }
     
@@ -129,7 +156,8 @@ extension FeedController:TweetCellDelegate {
     }
     
     func profileImageTapped(cell: TweetCell) {
-        guard let user = cell.tweet?.user else { return }
+        
+        guard let user = cell.user else { return }
         let profileVC = ProfileController(user: user)
         navigationController?.pushViewController(profileVC, animated: true)
     }

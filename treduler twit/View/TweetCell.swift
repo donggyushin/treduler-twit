@@ -13,6 +13,7 @@ protocol TweetCellDelegate:class {
     func profileImageTapped(cell:TweetCell)
     func captionTapped(cell:TweetCell)
     func goToReplyController(cell:TweetCell)
+    func presentAlert(title:String, message:String )
 }
 
 class TweetCell: UICollectionViewCell {
@@ -21,6 +22,14 @@ class TweetCell: UICollectionViewCell {
     var tweet:Tweet? {
         didSet {
             configure()
+            checkILikeThisTweet()
+            fetchUser()
+        }
+    }
+    
+    var user:User? {
+        didSet {
+            configureUser()
         }
     }
     
@@ -103,6 +112,7 @@ class TweetCell: UICollectionViewCell {
         iv.widthAnchor.constraint(equalToConstant: 16).isActive = true
         iv.heightAnchor.constraint(equalToConstant: 16).isActive = true
         iv.contentMode = .scaleAspectFit
+        iv.isUserInteractionEnabled = true
         return iv
     }()
     
@@ -135,20 +145,58 @@ class TweetCell: UICollectionViewCell {
     
     //MARK: - helpers
     
-    func configure(){
-        guard let tweet = self.tweet else { return }
-        captionLabel.text = tweet.caption
-        if let url = URL(string: tweet.user.profileImageUrl) {
-            profileImageView.sd_setImage(with: url, completed: nil)
-        }
+    
+    
+    func makeHeartRed(){
         
-        usernameLabel.text = "@\(tweet.user.username)"
-        nameLabel.text = tweet.user.name
-        timeLabel.text = ". " + tweet.timestamp.getElapsedInterval()
-        
+        self.heartIconImageView.image = #imageLiteral(resourceName: "like_filled")
+        self.heartIconImageView.tintColor = .systemRed
+        let tap = UITapGestureRecognizer(target: self, action: #selector(redHeartTapped))
+        self.heartIconImageView.addGestureRecognizer(tap)
     }
     
+    func makeHeartBlack(){
+        self.heartIconImageView.image = #imageLiteral(resourceName: "like")
+        self.heartIconImageView.tintColor = .black
+        let tap = UITapGestureRecognizer(target: self, action: #selector(blackHeartTapped))
+        self.heartIconImageView.addGestureRecognizer(tap)
+    }
+    
+    func presenterAlert(title:String, message:String ){
+        delegate?.presentAlert(title: title, message: message)
+    }
+   
+    
     // MARK: - selectors
+    
+    @objc func redHeartTapped(){
+        guard let tweetId = tweet?.id else { return }
+        self.makeHeartBlack()
+        self.heartIconImageView.isUserInteractionEnabled = false
+        TweetService.shared.userUnlikeThisTweet(tweetId: tweetId) { (error) in
+            if let error = error {
+                self.presenterAlert(title: "Warning", message: error.localizedDescription)
+                self.makeHeartRed()
+            }else {
+                self.heartIconImageView.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
+    @objc func blackHeartTapped(){
+        guard let tweetId = tweet?.id else { return }
+        self.makeHeartRed()
+        self.heartIconImageView.isUserInteractionEnabled = false
+        TweetService.shared.userLikeThisTweet(tweetId: tweetId) { (error) in
+            if let error = error {
+                self.presenterAlert(title: "Warning", message: error.localizedDescription)
+                self.makeHeartBlack()
+            }else {
+                self.heartIconImageView.isUserInteractionEnabled = true
+            }
+        }
+    }
+    
     
     @objc func goToReply(){
         delegate?.goToReplyController(cell: self)
@@ -163,6 +211,39 @@ class TweetCell: UICollectionViewCell {
     }
     
     // MARK: - configure ui
+    
+    func checkILikeThisTweet(){
+        
+        guard let tweet = tweet else { return }
+        TweetService.shared.checkILikeThisTweet(tweetId: tweet.id) { (bool) in
+            bool ? self.makeHeartRed() : self.makeHeartBlack()
+        }
+    }
+    
+    
+    func configure(){
+           guard let tweet = self.tweet else { return }
+           captionLabel.text = tweet.caption
+           timeLabel.text = ". " + tweet.timestamp.getElapsedInterval()
+           
+    }
+    func fetchUser(){
+        guard let tweet = tweet else { return }
+        UserService.shared.fetchUserFromUid(userId: tweet.userId) { (user) in
+            self.user = user
+        }
+    }
+    
+    func configureUser(){
+        guard let user = user else { return }
+        nameLabel.text = user.name
+        if let url = URL(string: user.profileImageUrl) {
+            profileImageView.sd_setImage(with: url, completed: nil)
+        }
+        
+        usernameLabel.text = "@\(user.username)"
+    }
+    
     
     func configureUI(){
         addSubview(profileImageView)

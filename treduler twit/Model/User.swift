@@ -17,6 +17,7 @@ struct User {
     let tweetIds:[String]
     let following:[String]
     let followers:[String]
+    let tweetsILiked:[String]
     
     init(data:[String:Any]) {
         let profileImageUrl = data["profileImageUrlString"] as? String ?? ""
@@ -27,6 +28,7 @@ struct User {
         let tweetIds = data["tweetIds"] as? [String] ?? []
         let following = data["following"] as? [String] ?? []
         let followers = data["followers"] as? [String] ?? []
+        let tweetsILiked = data["tweetsILiked"] as? [String] ?? []
         
         self.profileImageUrl = profileImageUrl
         self.email = email
@@ -36,5 +38,6 @@ struct User {
         self.tweetIds = tweetIds
         self.following = following
         self.followers = followers
+        self.tweetsILiked = tweetsILiked
     }
 }

@@ -15,18 +15,19 @@ struct Tweet {
     let retweets:Int
     let timestamp:Date
     let userId:String
-    let user:User
+//    let user:User
     let replieTweets:[String]
+    let likeUsers:[String]
     
-    
-    init(data:[String:Any], user:User) {
+    init(data:[String:Any], id:String) {
         let userId = data["userId"] as? String ?? ""
         let timeinterval = data["timestamp"] as? Int ?? 0
         let caption = data["caption"] as? String ?? ""
         let likes = data["likes"] as? Int ?? 0
         let retweets = data["retweets"] as? Int ?? 0
-        let id = data["id"] as? String ?? ""
+        
         let replieTweets = data["replieTweets"] as? [String] ?? []
+        let likeUsers = data["likeUsers"] as? [String] ?? []
         
         let timestamp = Date(timeIntervalSince1970: TimeInterval(timeinterval))
         
@@ -36,8 +37,9 @@ struct Tweet {
         self.id = id
         self.likes = likes
         self.retweets = retweets
-        self.user = user
+//        self.user = user
         self.replieTweets = replieTweets
+        self.likeUsers = likeUsers
     }
     
 }
