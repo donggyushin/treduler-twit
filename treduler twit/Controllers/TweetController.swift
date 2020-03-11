@@ -22,6 +22,7 @@ class TweetController: UICollectionViewController {
             
         }
     }
+    
     lazy var refreshController:UIRefreshControl = {
         let rc = UIRefreshControl()
         rc.addTarget(self, action: #selector(refresh), for: .valueChanged)

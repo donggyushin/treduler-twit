@@ -90,7 +90,9 @@ class FeedController: UICollectionViewController {
     func callFetchTweets(){
         TweetService.shared.fetchTweets { (tweets) in
             self.refreshControl.endRefreshing()
-            self.tweets = tweets
+            self.tweets = tweets.sorted(by: { (t1, t2) -> Bool in
+                return t1.timestamp > t2.timestamp
+            })
         }
     }
     

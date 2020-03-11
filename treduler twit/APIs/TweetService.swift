@@ -160,7 +160,7 @@ struct TweetService {
                 guard let data = querySnapshot!.data() else { return }
                 let tweet = Tweet(data: data, id: querySnapshot!.documentID )
                 completion(tweet)
-            }
+                }
             }
     }
     
@@ -260,19 +260,70 @@ struct TweetService {
     
     func fetchTweets(completion:@escaping([Tweet]) -> Void){
         
-        db.collection("tweets").order(by: "timestamp", descending: true).getDocuments { (querySnapshor, error) in
+        guard let currentId = Auth.auth().currentUser?.uid else { return }
+        var tweets = [Tweet]()
+        db.collection("users").document(currentId).getDocument { (querySnapshot, error) in
             if let error = error {
                 print(error.localizedDescription)
             }else {
-                var tweets = [Tweet]()
-                for document in querySnapshor!.documents {
-                    let data = document.data()
-                    let tweet = Tweet(data: data, id: document.documentID)
-                    tweets.append(tweet)
+                let data = querySnapshot!.data()!
+                let followingUserIds = data["following"] as? [String] ?? []
+                let tweetIds = data["tweetIds"] as? [String] ?? []
+                for followingUserId in followingUserIds {
+                    self.db.collection("users").document(followingUserId).getDocument { (querySnapshot, error) in
+                        if let error = error {
+                            print(error)
+                        }else {
+                            let data = querySnapshot!.data()!
+                            let tweetIds = data["tweetIds"] as? [String] ?? []
+                            for tweetId in tweetIds {
+                                self.db.collection("tweets").document(tweetId).getDocument { (querySnapshot, error) in
+                                    if let error = error {
+                                        print(error.localizedDescription)
+                                    }else {
+                                        let data = querySnapshot!.data()!
+                                        let tweet = Tweet(data: data, id: tweetId)
+                                        tweets.append(tweet)
+                                        completion(tweets)
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
                 }
-                completion(tweets)
+                
+                
+                for tweetId in tweetIds {
+                    self.db.collection("tweets").document(tweetId).getDocument { (querySnapshot, error) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        }else {
+                            let data = querySnapshot!.data()!
+                            let tweet = Tweet(data: data, id: tweetId)
+                            tweets.append(tweet)
+                        }
+                    }
+                }
+                
+                
+                
             }
         }
+        
+//        db.collection("tweets").order(by: "timestamp", descending: true).getDocuments { (querySnapshor, error) in
+//            if let error = error {
+//                print(error.localizedDescription)
+//            }else {
+//                var tweets = [Tweet]()
+//                for document in querySnapshor!.documents {
+//                    let data = document.data()
+//                    let tweet = Tweet(data: data, id: document.documentID)
+//                    tweets.append(tweet)
+//                }
+//                completion(tweets)
+//            }
+//        }
         
     }
 }
