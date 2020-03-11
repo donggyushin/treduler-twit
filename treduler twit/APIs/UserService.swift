@@ -133,6 +133,22 @@ struct UserService {
                 print(error.localizedDescription)
             }else {
                 self.db.collection("users").document(user.uid).updateData(["followers":FieldValue.arrayUnion([myUid])], completion: completion)
+                var notificationRef:DocumentReference?
+                notificationRef = self.db.collection("notifications").addDocument(data: [
+                "from":myUid,
+                "isRead":false,
+                "to":user.uid,
+                "type":"FOLLOW"
+                    ], completion: { (error) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        }else {
+                            let notificationId = notificationRef!.documentID
+                            self.db.collection("notifications").document(notificationId).updateData(["id" : notificationId])
+                            self.db.collection("users").document(user.uid).updateData(["notifications" : FieldValue.arrayUnion([notificationId])])
+                        }
+                })
+                
             }
         }
     }

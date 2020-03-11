@@ -21,6 +21,14 @@ class ProfileController: UICollectionViewController {
             collectionView.reloadData()        }
     }
     
+    lazy var refreshController:UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return rc
+    }()
+    
+    
+    
     // MARK: - life cycle
     
     init(user:User) {
@@ -52,17 +60,20 @@ class ProfileController: UICollectionViewController {
         collectionView.contentInset.top = -(UIApplication.shared.windows.filter {$0.isKeyWindow}.first?.safeAreaInsets.top ?? 0)
         collectionView.register(ProfileHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifier)
         collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.refreshControl = refreshController
         fetchTweets()
     }
     
     
-    override func viewDidAppear(_ animated: Bool) {
-        print(collectionView.contentInset)
+    // MARK: - selectors
+    @objc func refresh(){
+        fetchTweets()
     }
     
     // MARK: - API
     func fetchTweets(){
         TweetService.shared.fetchTweets(user: self.user) { tweets in
+            self.refreshController.endRefreshing()
             self.tweets = tweets
         }
     }

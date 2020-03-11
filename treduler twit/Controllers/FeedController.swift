@@ -15,6 +15,9 @@ private let reuseIdenrifierForTweetCell = "tweetCell"
 class FeedController: UICollectionViewController {
     
     // MARK: - properties
+    
+    private let refreshControl = UIRefreshControl()
+    
     var tweets = [Tweet]() {
         didSet {
         
@@ -53,12 +56,17 @@ class FeedController: UICollectionViewController {
         collectionView.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdenrifierForTweetCell)
         callFetchTweets()
         configureNavigationBarUI()
+        configure()
         
     }
     
     
     
     // MARK: - selectors
+    
+    @objc func refresh(){
+        callFetchTweets()
+    }
     
     @objc func temperaryLogoutFunc(){
         try! Auth.auth().signOut()
@@ -81,12 +89,18 @@ class FeedController: UICollectionViewController {
     
     func callFetchTweets(){
         TweetService.shared.fetchTweets { (tweets) in
+            self.refreshControl.endRefreshing()
             self.tweets = tweets
         }
     }
     
     
     // MARK: - Configure UI
+    
+    func configure(){
+        collectionView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+    }
     
     func configureNavigationBarUI(){
         let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.systemBlue,

@@ -184,10 +184,10 @@ class TweetCell: UICollectionViewCell {
     }
     
     @objc func blackHeartTapped(){
-        guard let tweetId = tweet?.id else { return }
+        guard let tweet = tweet else { return }
         self.makeHeartRed()
         self.heartIconImageView.isUserInteractionEnabled = false
-        TweetService.shared.userLikeThisTweet(tweetId: tweetId) { (error) in
+        TweetService.shared.userLikeThisTweet(tweet: tweet) { (error) in
             if let error = error {
                 self.presenterAlert(title: "Warning", message: error.localizedDescription)
                 self.makeHeartBlack()

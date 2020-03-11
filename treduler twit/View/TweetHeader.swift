@@ -251,7 +251,7 @@ class TweetHeader: UICollectionReusableView {
         self.likeButton.isUserInteractionEnabled = false
         self.likeButton.image = #imageLiteral(resourceName: "like_filled")
         self.likeButton.tintColor = .systemRed
-        TweetService.shared.userLikeThisTweet(tweetId: tweet.id) { (error) in
+        TweetService.shared.userLikeThisTweet(tweet: tweet) { (error) in
             if let error = error {
                 self.presentAlert(title: "Warning", message: error.localizedDescription)
                 self.likeButton.isUserInteractionEnabled = true

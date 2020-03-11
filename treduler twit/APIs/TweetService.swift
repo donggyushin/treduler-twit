@@ -43,23 +43,73 @@ struct TweetService {
                 self.db.collection("users").document(userId).updateData([
                     "tweetsILiked":FieldValue.arrayRemove([tweetId])
                 ], completion: completion)
+                
             }
         }
     }
     
-    func userLikeThisTweet(tweetId:String, completion:@escaping(Error?) -> Void){
+    func userLikeThisTweet(tweet:Tweet, completion:@escaping(Error?) -> Void){
         guard let userId = Auth.auth().currentUser?.uid else { return }
-        db.collection("tweets").document(tweetId).updateData([
-            "likeUsers":FieldValue.arrayUnion([userId])
-        ]) { (error) in
+        
+        
+        // 먼저 해당 트위터에 좋아요를 누른 사람중에 본인이 있는지 없는지 확인한다. 본인이 있을 경우에는 에러없이 그냥 리턴
+        db.collection("tweets").document(tweet.id).getDocument { (querySnapshot, error) in
             if let error = error {
-                print(error)
+                print(error.localizedDescription)
             }else {
-                self.db.collection("users").document(userId).updateData([
-                    "tweetsILiked": FieldValue.arrayUnion([tweetId])
-                ], completion: completion)
+                let data = querySnapshot!.data()!
+                let likeUsers = data["likeUsers"] as? [String] ?? []
+                for likeUser in likeUsers {
+                    if likeUser == userId {
+                        return completion(nil)
+                    }
+                }
+                // Start liking tweet
+                self.db.collection("tweets").document(tweet.id).updateData([
+                    "likeUsers":FieldValue.arrayUnion([userId])
+                ]) { (error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }else {
+                        self.db.collection("users").document(userId).updateData([
+                            "tweetsILiked": FieldValue.arrayUnion([tweet.id])
+                        ], completion: completion)
+                        
+                        
+                        if userId != tweet.userId {
+                            // Start add notification
+                            var ref:DocumentReference?
+                            ref = self.db.collection("notifications").addDocument(data: [
+                                "from":userId,
+                                "tweetId":tweet.id,
+                                "to":tweet.userId,
+                                "type":"LIKE",
+                                "isRead":false
+                            ]) { (error) in
+                                if let error = error {
+                                    print(error.localizedDescription)
+                                }else {
+                                    self.db.collection("notifications").document(ref!.documentID).updateData(["id" : ref!.documentID])
+                                    self.db.collection("users").document(tweet.userId).updateData(["notifications" :
+                                        FieldValue.arrayUnion([ref!.documentID])
+                                    ])
+                                }
+                            } // End notification
+                        }
+                        
+                        
+                    }
+                }   // End liking tweet
+                
+                
             }
         }
+        
+        
+        
+        
+        
+        
     }
     
     func listenTweetLikesAndRetweetsNumber(tweetId:String, completion:@escaping(Int, Int) -> Void){
@@ -135,6 +185,26 @@ struct TweetService {
                 self.db.collection("users").document(uid).updateData([
                     "tweetIds": FieldValue.arrayUnion([id])
                 ])
+                
+                
+                // new notification
+                if uid != parentTweet.userId {
+                    var notificationRef:DocumentReference?
+                    notificationRef = self.db.collection("notifications").addDocument(data: [
+                    "from" : uid,
+                    "isRead": false,
+                    "to": parentTweet.userId,
+                    "tweetId": parentTweet.id,
+                    "type": "RETWEET"
+                    ]) { (error) in
+                        if let error = error {
+                            print(error.localizedDescription)
+                        }else {
+                            self.db.collection("notifications").document(notificationRef!.documentID).updateData(["id":notificationRef!.documentID])
+                            self.db.collection("users").document(parentTweet.userId).updateData(["notifications" : FieldValue.arrayUnion([notificationRef!.documentID])])
+                        }
+                    }
+                }
             }
         }
     }
@@ -204,28 +274,5 @@ struct TweetService {
             }
         }
         
-//        db.collection("tweets").order(by: "timestamp", descending: true).addSnapshotListener { (querySnapshot, error) in
-//            if let error = error {
-//                print(error.localizedDescription)
-//            }else {
-//
-//                querySnapshot!.documentChanges.forEach { (diff) in
-//                    if (diff.type == .modified) {
-//                        let data = diff.document.data()
-//                    }else {
-//                        var tweets = [Tweet]()
-//                        for document in querySnapshot!.documents {
-//                            let data = document.data()
-//
-//                            let tweet = Tweet(data: data, id: document.documentID)
-//                            tweets.append(tweet)
-//                        }
-//
-//                        completion(tweets)
-//                    }
-//                }
-//
-//            }
-//        }
     }
 }

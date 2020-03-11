@@ -16,13 +16,19 @@ class TweetController: UICollectionViewController {
     
     private var retweets = [Tweet]() {
         didSet {
-            print(self.retweets)
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }
             
         }
     }
+    lazy var refreshController:UIRefreshControl = {
+        let rc = UIRefreshControl()
+        rc.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        return rc
+    }()
+    
+    
     
     // MARK: - Life cycles
     
@@ -40,7 +46,13 @@ class TweetController: UICollectionViewController {
         configuration()
         configureView()
         fetchRetweets()
-
+        
+    }
+    
+    // MARK: - selectors
+    
+    @objc func refresh(){
+        fetchRetweets()
     }
     
     // MARK: - APIs
@@ -48,6 +60,7 @@ class TweetController: UICollectionViewController {
     
     func fetchRetweets(){
         TweetService.shared.fetchRetweets(tweet: tweet) { (tweets) in
+            self.refreshController.endRefreshing()
             self.retweets = tweets
         }
     }
@@ -59,6 +72,7 @@ class TweetController: UICollectionViewController {
         self.collectionView!.register(TweetHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: reuseHeaderIdentifier)
         
         self.collectionView!.register(TweetCell.self, forCellWithReuseIdentifier: reuseIdentifier)
+        collectionView.refreshControl = refreshController
     }
     
     func configureView(){
